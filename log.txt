@@ -1,0 +1,17 @@
+IP trước khi ngắt kết nối:
+
+IP sau khi kết nối lại:103.199.33.34
+
+IP trước khi ngắt kết nối: 103.199.33.34
+IP sau khi kết nối lại: 103.199.33.34
+IP trước khi ngắt kết nối: 118.69.55.195
+IP sau khi kết nối lại: 103.199.32.55
+Địa chỉ IP đã thay đổi. 118.69.55.195 -> 103.199.32.55
+IP trước khi ngắt kết nối: 103.199.32.55
+IP sau khi kết nối lại: 103.199.32.55
+IP trước khi ngắt kết nối: 103.199.32.55
+IP sau khi kết nối lại: 103.199.32.55
+IP trước khi ngắt kết nối: 103.199.32.55
+IP sau khi kết nối lại: 103.199.32.55
+IP trước khi ngắt kết nối: 103.199.33.32
+IP sau khi kết nối lại: 103.199.33.32

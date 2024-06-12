@@ -21,7 +21,7 @@ time_sleep_after = 2
 loop  = 0
 
 def get_password():
-     return fake.password(10,special_chars=True,upper_case=True, lower_case=True,digits=True)
+    return fake.password(10,special_chars=True,upper_case=True, lower_case=True,digits=True)
 
 def click_check_box(x,y,sleep):
     pyautogui.moveTo(x,y)
@@ -43,35 +43,6 @@ def register():
         log = "mail : "+mail+" , userName : "+userName +" , pw : "+password
         FileHandler.add_data(log)
         print(log)
-        #email
-        typing_input(823,396,mail)
-        #userName
-        typing_input(823,450,userName)
-        #pw
-        typing_input(823,506,password)
-        #cf pw
-        typing_input(823,611,password)
-        #tick đồng ý
-        click_check_box(765,769,time_sleep_after)
-        # check robot
-        click_check_box(780,843,time_sleep_after*3)
-        # click button register
-        click_check_box(931,940,time_sleep_after*3)
-
-        #back homepage
-        click_check_box(953,721,time_sleep_after*3)
-        #userName
-        typing_input(866,531,mail)
-        #password
-        typing_input(868,581,password)
-        #click robot
-        click_check_box(778,707,time_sleep_after*2)
-        #click login
-        click_check_box(940,804,time_sleep_after*3)
-        #click close popup like X
-        click_check_box(1095,248,time_sleep_after*3)
-        #click href add extention
-        click_check_box(1131,148,time_sleep_after)
 
         print("to page nodepay extention then install")
         #click button  thêm extention vao chrome
@@ -99,7 +70,7 @@ def register():
     finally:
         print("end")
 
-while loop < 10:
+while loop < 1:
     loop+=1
     print("****************** begin ",loop, "******************")
     register()
