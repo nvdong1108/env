@@ -1,4 +1,4 @@
-
+import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -70,8 +70,6 @@ def register():
     finally:
         print("end")
 
-while loop < 1:
-    loop+=1
-    print("****************** begin ",loop, "******************")
-    register()
-    print("****************** end ",loop,"******************")
+
+userName = f"{fake.user_name()}{random.randint(1980, 2010)}"
+print(userName)

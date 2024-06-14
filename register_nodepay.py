@@ -1,95 +1,154 @@
-
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from faker import  Faker
-
+from faker import Faker
+import os
 from FileHandler import FileHandler
 from disconnect_wifi import reset_wifi
 import pyautogui
 import time
+import random
 
-fake  = Faker()
-
-
-
+fake = Faker()
 time_sleep = 2
 time_sleep_before = 1
 time_sleep_after = 2
-loop  = 0
+loop: int = 0
+log_path = os.path.join("logs", "mouseInfoLog.txt")
+coordinates_click = []
+coordinates_typing = []
+
+
+def load_x_y():
+    global coordinates_click
+    global coordinates_typing
+    coordinates_click = []
+    coordinates_typing = []
+
+    with open(log_path, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            parts = line.strip().split(',')
+            k = parts[0]
+            x = int(parts[1])
+            y = int(parts[2])
+            if k == 'click':
+                coordinates_click.append((x, y))
+            else:
+                coordinates_typing.append((x, y))
+    print(f"list click {coordinates_click}")
+    print(f"list typing {coordinates_typing}")
+
+
 
 def get_password():
-     return fake.password(10,special_chars=True,upper_case=True, lower_case=True,digits=True)
+    return fake.password(10, special_chars=True, upper_case=True, lower_case=True, digits=True)
 
-def click_check_box(x,y,sleep):
-    pyautogui.moveTo(x,y)
+
+def click_check_box(index):
+    print(f"click_check_box {index}")
+    x, y = coordinates_click[index]
+    pyautogui.moveTo(x, y)
     time.sleep(time_sleep_before)
     pyautogui.click()
-    time.sleep(sleep)
-def typing_input(x,y,value):
-    pyautogui.moveTo(x,y)
+    time.sleep(time_sleep_after)
+
+
+def typing_input(index, value):
+    print(f"typing_input {index}")
+    x, y = coordinates_typing[index]
+    pyautogui.moveTo(x, y)
     time.sleep(time_sleep_before)
     pyautogui.click()
     pyautogui.write(value)
     time.sleep(time_sleep_after)
+
+
 def register():
     try:
         time.sleep(1)
         mail = fake.email()
-        userName = fake.user_name()
+        userName = f"{fake.user_name()}{random.randint(1980, 2010)}"
         password = get_password()
-        log = "mail : "+mail+" , userName : "+userName +" , pw : "+password
+        index_click: int = -1
+        index_typing: int = -1
+
+        log = "mail : " + mail + " , userName : " + userName + " , pw : " + password
         FileHandler.add_data(log)
         print(log)
-        #email
-        typing_input(823,396,mail)
-        #userName
-        typing_input(823,450,userName)
-        #pw
-        typing_input(823,506,password)
-        #cf pw
-        typing_input(823,611,password)
-        #tick đồng ý
-        click_check_box(765,769,time_sleep_after)
-        # check robot
-        click_check_box(780,843,time_sleep_after*3)
-        # click button register
-        click_check_box(931,940,time_sleep_after*3)
+        print("====> PAGE 1. Register")
+        print("1. typing mail")
+        index_typing += 1
+        typing_input(index_typing, mail)
 
-        #back homepage
-        click_check_box(953,721,time_sleep_after*3)
-        #userName
-        typing_input(866,531,mail)
-        #password
-        typing_input(868,581,password)
-        #click robot
-        click_check_box(778,707,time_sleep_after*2)
-        #click login
-        click_check_box(940,804,time_sleep_after*3)
-        #click close popup like X
-        click_check_box(1095,248,time_sleep_after*3)
-        #click href add extention
-        click_check_box(1131,148,time_sleep_after)
+        print("2. typing user name")
+        index_typing += 1
+        typing_input(index_typing, userName)
 
-        print("to page nodepay extention then install")
-        #click button  thêm extention vao chrome
-        click_check_box(1407,240,time_sleep_after)
-        #click popup continue install
-        click_check_box(1019,240,time_sleep_after)
-        #click popup add extention
-        click_check_box(1027,236,time_sleep_after)
-        #click manager extention
-        click_check_box(1771,59,time_sleep_after)
-        #click extention nodepay
-        click_check_box(1592,307,time_sleep_after)
-        #click extention nodepay
-        click_check_box(1577,425,time_sleep_after)
-        #click xoa extention nodepay
-        click_check_box(1403,239,time_sleep_after)
-        #click confrom remove  extention nodepay
-        click_check_box(1597,216,time_sleep_after)
+        print("3. typing password")
+        index_typing += 1
+        typing_input(index_typing, password)
+
+        print("4. typing confirm password")
+        index_typing += 1
+        typing_input(index_typing, password)
+
+        print("5. check agree")
+        index_click += 1
+        click_check_box(index_click)
+
+        print("6. check not robot")
+        index_click += 1
+        click_check_box(index_click)
+
+        print("6. click register")
+        index_click += 1
+        click_check_box(index_click)
+
+        time.sleep(1000)
+
+        print("====> PAGE 2. Notification register success")
+        print("1. click come back homepage")
+        index_click += 1
+        click_check_box(index_click)
+
+        print("====> PAGE 3. Login")
+        print("1. typing mail")
+        index_typing += 1
+        typing_input(index_typing, mail)
+
+        print("2. typing password")
+        index_typing += 1
+        typing_input(index_typing, mail)
+
+        print("3. click not robot")
+        index_click += 1
+        click_check_box(index_click)
+
+        print("4. click  Login")
+        index_click += 1
+        click_check_box(index_click)
+
+        print("====> PAGE 4. Dashboard")
+        # click close popup like X
+        click_check_box(1095, 248)
+        # click href add extention
+        click_check_box(1131, 148)
+
+        print("====> PAGE 4. Thêm extension")
+        # click button  thêm extention vao chrome
+        click_check_box(1407, 240)
+        # click popup continue install
+        click_check_box(1019, 240)
+        # click popup add extention
+        click_check_box(1027, 236)
+        # click manager extention
+        click_check_box(1771, 59)
+        # click extention nodepay
+        click_check_box(1592, 307)
+        # click extention nodepay
+        click_check_box(1577, 425)
+        # click xoa extention nodepay
+        click_check_box(1403, 239)
+        # click confrom remove  extention nodepay
+        click_check_box(1597, 216)
 
         print("Register Sucess begin change IP address...........")
         time.sleep(3)
@@ -99,8 +158,11 @@ def register():
     finally:
         print("end")
 
-while loop < 10:
-    loop+=1
-    print("****************** begin ",loop, "******************")
-    register()
-    print("****************** end ",loop,"******************")
+def main() :
+    while True:
+        print(f"****************** begin ******************")
+        register()
+        print(f"****************** end  ******************")
+
+load_x_y()
+main()

@@ -5,21 +5,31 @@ import os
 # Danh sách lưu tọa độ
 coordinates = []
 log_path = os.path.join("logs" , "mouseInfoLog.txt")
+shift_pressed = False
 
-def save_coordinates(x, y):
-    coordinates.append((x, y))
+def clear_log_file():
+    with open(log_path, "w") as file:
+        file.truncate(0)
+    print("Đã xóa dữ liệu trong file log.")
+def save_coordinates(k,x, y):
+    coordinates.append((k,x, y))
     with open(log_path, "a") as file:
-        file.write(f"{x},{y}\n")
-    print(f"Tọa độ đã lưu: ({x}, {y})")
-# Định nghĩa các hàm xử lý cho sự kiện chuột và bàn phím
-def on_click(x, y, button, pressed):
-    if pressed:
-        save_coordinates(x, y)
+        file.write(f"{k},{x},{y}\n")
+    print(f"===========> lưu: ({k},{x}, {y})")
+
 def on_press(key):
+    global shift_pressed
     try:
-        if key.char == 's':
+        if key in (keyboard.Key.shift, keyboard.Key.shift_l, keyboard.Key.shift_r):
+            shift_pressed = True
+        elif  key.char == 'c' and shift_pressed:
+            shift_pressed = False
             x, y = pyautogui.position()
-            save_coordinates(x, y)
+            save_coordinates('click', x, y)
+        elif key.char == 't'and shift_pressed:
+            shift_pressed = False
+            x, y = pyautogui.position()
+            save_coordinates('typing', x, y)
     except AttributeError:
         pass
 # Thiết lập listener cho chuột và bàn phím
@@ -31,14 +41,14 @@ keyboard_listener.start()
 
 try:
     print("Nhấn phím 's' để lưu tọa độ hoặc nhấn Ctrl+C để dừng chương trình.")
+    clear_log_file()
     while True:
         x, y = pyautogui.position()
-        print(f"Tọa độ hiện tại của con trỏ chuột: ({x}, {y})")
-        time.sleep(0.5)
+        print(f"({x}, {y})")
+        time.sleep(1)
 
 except KeyboardInterrupt:
     print("Đã dừng chương trình.")
     print("Danh sách tọa độ đã lưu:", coordinates)
 finally:
-    mouse_listener.stop()
     keyboard_listener.stop()
